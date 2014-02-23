@@ -7,11 +7,9 @@ input.focus();
 
 ok.addEventListener('click', e => {
     var token = input.value;
-    console.log('input token', token);
     if(!token || token.length <= 1)
         return; // ignore
-    console.log('input token', token);
-    // test the token
+    
     self.port.emit('test-token', token);
     
     // add a spinner

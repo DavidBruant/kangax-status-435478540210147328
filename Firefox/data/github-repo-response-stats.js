@@ -1,5 +1,5 @@
 'use strict';
 
-self.port.on('response-time-data', data => {
+self.port.on('repo-response-stats', data => {
     console.log('integrate data to content', data);
 })
