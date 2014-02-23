@@ -32,11 +32,9 @@ var storage = require("sdk/simple-storage").storage;
 
 var Github = require('githubAPI');
 
-console.log('Promise', typeof Promise, this.Promise);
-
 exports.main = function(){
     
-    var pageMod; // TODO pageMod.destroy when token changes
+    var pageMod;
     var gh;
     
     var tokenPanel = Panel({
@@ -90,6 +88,9 @@ exports.main = function(){
     });
     
     function getReadyForGithubRepoPages(token){
+        if(pageMod)
+            pageMod.destroy();
+        
         pageMod = PageMod({
             include: /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/?$/,
             
@@ -125,6 +126,8 @@ exports.main = function(){
                             var issueCreatorId;
                             var issueCreationDate;
 
+                            // TODO omit issues by repo collaborators
+                        
                             if(issue.comments === 0) 
                                 commentlessIssuesCount++;
                             else{

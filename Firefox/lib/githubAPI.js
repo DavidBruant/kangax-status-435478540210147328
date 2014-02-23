@@ -30,8 +30,8 @@ module.exports = function(token){
             Request({
                 url: BASE_URL+'users', // any url could work
                 onComplete: function (response) {
-                    if(response.status === 200)
-                        def.resolve(token);
+                    if(response.status < 400) 
+                        def.resolve(token); // 200 or 304 usually
                     else // 401
                         def.reject('fail '+token);
                 },

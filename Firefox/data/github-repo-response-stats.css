@@ -1,0 +1,14 @@
+ul.sunken-menu-group li[aria-label="Issues"] div.response-time-stats{
+    padding: 0 5px;
+}
+
+ul.sunken-menu-group li[aria-label="Issues"] div.response-time-stats span{
+    display: block;
+}
+
+ul.sunken-menu-group li[aria-label="Issues"] div.response-time-stats h1{
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0; 
+}
