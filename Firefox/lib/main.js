@@ -32,7 +32,7 @@ var storage = require("sdk/simple-storage").storage;
 
 var Github = require('githubAPI');
 
-var ONE_DAY = 24*60*60*1000; // ms
+console.log('Promise', typeof Promise, this.Promise);
 
 exports.main = function(){
     
@@ -92,8 +92,11 @@ exports.main = function(){
     function getReadyForGithubRepoPages(token){
         pageMod = PageMod({
             include: /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/?$/,
-            contentScriptFile: data.url("github-response-time.js"),
-            contentScriptWhen: "start"
+            
+            contentScriptFile: data.url("github-repo-response-stats.js"),
+            contentScriptWhen: "start", // so that the attach event triggers as soon as possible
+            
+            contentStyleFile: data.url("github-repo-response-stats.css")
         });
         
         pageMod.on('attach', worker => {
@@ -113,10 +116,10 @@ exports.main = function(){
             
             gh.getLatestRepoIssues(repo)
                 .then( issues => {
+                    issues = issues.slice(0, 50); // refraining from making too many HTTP requests
+                    
                     console.log('issues', issues);
                     issuesNb = issues.length;
-                    
-                    issues = issues.slice(0, 40); // refraining from making too many HTTP requests
                     
                     return all(issues.map( issue => {
                             var issueCreatorId;
@@ -137,7 +140,7 @@ exports.main = function(){
                                         firstCommentDate = Date.parse(firstComment.created_at);
                                         
                                         // difference in days
-                                        return Math.round((firstCommentDate - issueCreationDate)/ONE_DAY);
+                                        return firstCommentDate - issueCreationDate;
                                     }
                                     else
                                         commentlessIssuesCount++;
@@ -152,14 +155,11 @@ exports.main = function(){
                         console.timeEnd('average repo response time');
                         delays = delays.filter(x => x !== undefined);
                         console.log('delays', delays);
-                        console.log('stats', {
-                            commentlessIssues: commentlessIssuesCount,
-                            averageResponseTime: delays.reduce( (acc, curr) => {return acc+curr}, 0 )/delays.length
-                        })
                         
                         worker.port.emit('repo-response-stats', {
+                            issuesConsidered: issuesNb,
                             commentlessIssues: commentlessIssuesCount,
-                            averageResponseTime: delays.reduce( (acc, curr) => {return acc+curr}, 0 )/delays.length
+                            responseTimes: delays
                         })
                     },
                     err => console.log('err', err)
