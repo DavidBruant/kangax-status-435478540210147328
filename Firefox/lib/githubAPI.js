@@ -19,6 +19,7 @@ module.exports = function(token){
         throw new TypeError("token isn't a string ("+token === null ? 'null' : typeof token+")");
 
     var headers = {
+        'User-Agent': 'https://github.com/DavidBruant/kangax-status-435478540210147328/',
         'Authorization': 'token '+token
     };
     
