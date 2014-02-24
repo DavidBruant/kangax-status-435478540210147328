@@ -59,9 +59,9 @@ exports.main = function(){
     
     var githubWidget = Widget({
         id: "kang-4354",
-        label: "enter personal token",
-        content: "PR Time",
-        width: 60,
+        label: "Enter personal access token",
+        content: "RepoReact",
+        width: 80,
 
         panel: tokenPanel
     });
