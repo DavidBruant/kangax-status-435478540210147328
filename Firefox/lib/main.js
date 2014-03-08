@@ -176,8 +176,9 @@ exports.main = function(){
         })
     }
     
-    
+
     if(storage.token){
+        gh = new Github(storage.token);
         getReadyForGithubRepoPages(storage.token);
     }
     else{ // no token stored. Ask one to user
